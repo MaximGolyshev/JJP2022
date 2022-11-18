@@ -3,9 +3,6 @@
   <component name="NewModuleRootManager">
     <output-test url="file://$MODULE_DIR$/../../build/classes/java/test" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../build/generated/sources/annotationProcessor/java/test">
-      <sourceFolder url="file://$MODULE_DIR$/../../build/generated/sources/annotationProcessor/java/test" isTestSource="true" generated="true" />
-    </content>
     <content url="file://$MODULE_DIR$/../../src/test">
       <sourceFolder url="file://$MODULE_DIR$/../../src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../src/test/resources" type="java-test-resource" />
@@ -16,6 +13,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.projectlombok:lombok:1.18.24" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.14.0-rc2" level="project" />
     <orderEntry type="library" name="Gradle: org.postgresql:postgresql:42.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.beust:jcommander:1.78" level="project" />
     <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-api:5.9.0" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.13.2" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.14.0-rc2" level="project" />

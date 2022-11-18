@@ -20,6 +20,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testCompileOnly("org.projectlombok:lombok:1.18.24")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
+    implementation("com.beust:jcommander:1.78")
+
 }
 
 tasks.getByName<Test>("test") {

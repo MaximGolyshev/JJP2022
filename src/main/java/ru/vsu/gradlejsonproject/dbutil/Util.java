@@ -2,10 +2,10 @@ package ru.vsu.gradlejsonproject.dbutil;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import ru.vsu.gradlejsonproject.dbpojo.Player;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -27,7 +27,45 @@ public class Util {
 
     public static List<Player> readPlayersFromFile(String fileName) throws IOException {
         InputStream resourceAsStream = Util.class.getClassLoader().getResourceAsStream(fileName);
-        return objectMapper.readValue(resourceAsStream, new TypeReference<List<Player>>() {});
+        return objectMapper.readValue(resourceAsStream, new TypeReference<>() {});
+    }
+
+    @SneakyThrows
+    public static Player readFromFile(String fileName){
+        InputStream resourceAsStream = Util.class.getClassLoader().getResourceAsStream(fileName);
+        return objectMapper.readValue(resourceAsStream, Player.class);
+    }
+
+    @SneakyThrows
+    public static void writeToFile(String fileName, List<Player> players){
+        File f = new File(fileName);
+        f.createNewFile();
+        try(OutputStream outputStream =
+                    new FileOutputStream(f)){
+            PrintStream ps = new PrintStream(outputStream);
+            ps.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(players));
+        }
+    }
+
+    @SneakyThrows
+    public static void writeToFile(String fileName, Player player){
+        File f = new File(fileName);
+        boolean newFile = f.createNewFile();
+        try(OutputStream outputStream =
+                    new FileOutputStream(f)){
+            PrintStream ps = new PrintStream(outputStream);
+            ps.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(player));
+        }
+    }
+
+    @SneakyThrows
+    public static void writeToConsole(List<Player> players){
+        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(players));
+    }
+
+    @SneakyThrows
+    public static void writeToConsole(Player player){
+        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(player));
     }
 
 }

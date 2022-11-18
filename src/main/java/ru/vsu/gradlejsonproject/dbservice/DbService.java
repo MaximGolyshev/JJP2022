@@ -18,6 +18,48 @@ public class DbService {
         savePlayers(Collections.singletonList(player));
     }
 
+
+    public static void updatePlayer(Long id, Player player) throws SQLException {
+        Connection connection = Util.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(PlayerDbConstraints.UPDATE_PLAYER_SQL);
+        preparedStatement.setLong(1, id);
+        preparedStatement.setString(2, player.getNickname());
+        preparedStatement.executeUpdate();
+        clearForPlayer(id, connection);
+        savePlayerItems(id, player.getItems());
+        savePlayerCurrencies(id, player.getCurrencies());
+        saveProgresses(player.getProgresses());
+    }
+
+    public static void deletePlayer(Long id) throws SQLException {
+        Connection connection = Util.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(PlayerDbConstraints.DELETE_PLAYER_SQL);
+        preparedStatement.setLong(1, id);
+        clearForPlayer(id, connection);
+        preparedStatement.executeUpdate();
+    }
+
+    private static void clearForPlayer(Long id, Connection connection) throws SQLException {
+        PreparedStatement preForMapItem = connection.prepareStatement(PlayerMapDbConstraints.DELETE_ALL_ITEMS_BY_PLAYER_ID);
+        preForMapItem.setLong(1, id);
+        preForMapItem.executeUpdate();
+        PreparedStatement preForMapCurrency = connection.prepareStatement(PlayerMapDbConstraints.DELETE_ALL_CURRENCY_BY_PLAYER_ID);
+        preForMapCurrency.setLong(1, id);
+        preForMapCurrency.executeUpdate();
+        PreparedStatement preForProgresses = connection.prepareStatement(ProgressDbConstraints.DELETE_ALL_BY_PLAYER_ID);
+        preForProgresses.setLong(1, id);
+        preForProgresses.executeUpdate();
+    }
+
+    public static void deleteAllPlayers() throws SQLException {
+        Connection connection = Util.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(PlayerDbConstraints.DELETE_ALL_PLAYERS_SQL);
+        preparedStatement.executeUpdate();
+        connection.prepareStatement(PlayerMapDbConstraints.DELETE_ALL_CURRENCY).executeUpdate();
+        connection.prepareStatement(PlayerMapDbConstraints.DELETE_ALL_ITEMS).executeUpdate();
+    }
+
+
     public static void savePlayers(List<Player> playerList) throws SQLException {
         Connection connection = Util.getConnection();
         for (Player player : playerList) {
@@ -119,6 +161,22 @@ public class DbService {
             playerList.add(pl);
         }
         return playerList;
+    }
+    public static Player getPlayerById(Long id) throws SQLException {
+        Connection connection = Util.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(PlayerDbConstraints.READ_USER_BY_ID_SQL);
+        preparedStatement.setLong(1, id);
+        preparedStatement.execute();
+        ResultSet resultSet = preparedStatement.getResultSet();
+        resultSet.next();
+        Long playerId = resultSet.getLong(1);
+        return Player.builder()
+                    .playerId(playerId)
+                    .nickname(resultSet.getString(2))
+                    .currencies(getPlayerCurrencies(playerId))
+                    .progresses(getPlayerProgresses(playerId))
+                    .items(getPlayerItems(playerId))
+                    .build();
     }
 
     private static Map<Long, Item> getPlayerItems(Long playerId) throws SQLException {
