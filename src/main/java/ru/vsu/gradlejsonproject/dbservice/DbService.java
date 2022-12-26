@@ -22,8 +22,8 @@ public class DbService {
     public static void updatePlayer(Long id, Player player) throws SQLException {
         Connection connection = Util.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(PlayerDbConstraints.UPDATE_PLAYER_SQL);
-        preparedStatement.setLong(1, id);
-        preparedStatement.setString(2, player.getNickname());
+        preparedStatement.setLong(2, id);
+        preparedStatement.setString(1, player.getNickname());
         preparedStatement.executeUpdate();
         clearForPlayer(id, connection);
         savePlayerItems(id, player.getItems());
@@ -168,15 +168,18 @@ public class DbService {
         preparedStatement.setLong(1, id);
         preparedStatement.execute();
         ResultSet resultSet = preparedStatement.getResultSet();
-        resultSet.next();
-        Long playerId = resultSet.getLong(1);
-        return Player.builder()
+
+        if(resultSet.next()){
+            Long playerId = resultSet.getLong(1);
+            return Player.builder()
                     .playerId(playerId)
                     .nickname(resultSet.getString(2))
                     .currencies(getPlayerCurrencies(playerId))
                     .progresses(getPlayerProgresses(playerId))
                     .items(getPlayerItems(playerId))
                     .build();
+        }
+       return null;
     }
 
     private static Map<Long, Item> getPlayerItems(Long playerId) throws SQLException {

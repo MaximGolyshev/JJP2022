@@ -34,6 +34,7 @@ public class PlayerController extends HttpServlet {
             out.flush();
             resp.setStatus(200);
         }catch (Exception e){
+            e.printStackTrace();
             resp.sendError(400, e.getMessage());
         }
 
@@ -48,6 +49,7 @@ public class PlayerController extends HttpServlet {
             DbService.savePlayers(players);
             resp.setStatus(200);
         }catch (Exception e){
+            e.printStackTrace();
             resp.sendError(400, e.getMessage());
         }
     }
@@ -65,10 +67,11 @@ public class PlayerController extends HttpServlet {
                 Long id = Long.valueOf(split[2]);
                 Player player = Util.convertOneFromString(stringPlayer);
                 player.setPlayerId(id);
-                DbService.savePlayer(player);
+                DbService.updatePlayer(id, player);
             }
         }catch (Exception e){
-            resp.setStatus(200);
+            e.printStackTrace();
+            resp.sendError(400, e.getMessage());
         }
 
     }
@@ -90,7 +93,8 @@ public class PlayerController extends HttpServlet {
                 resp.sendError(400);
             }
         }catch (Exception e){
-            resp.sendError(400);
+            e.printStackTrace();
+            resp.sendError(400, e.getMessage());
         }
     }
 
