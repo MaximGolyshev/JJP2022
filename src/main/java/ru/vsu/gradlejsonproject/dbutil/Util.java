@@ -15,7 +15,7 @@ public class Util {
     private static Connection connection = null;
     private static final String URL = "jdbc:postgresql://localhost:5432/game";
     private static final String login = "postgres";
-    private static final String password = "456852";
+    private static final String password = "maxim";
     public static final ObjectMapper objectMapper = new ObjectMapper();
 
     @SneakyThrows
