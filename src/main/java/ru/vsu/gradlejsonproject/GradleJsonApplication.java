@@ -2,6 +2,7 @@ package ru.vsu.gradlejsonproject;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import ru.vsu.gradlejsonproject.config.ServerConfig;
 import ru.vsu.gradlejsonproject.console.ConsoleArgs;
 import ru.vsu.gradlejsonproject.dbpojo.Player;
 import ru.vsu.gradlejsonproject.dbservice.DbService;
@@ -13,7 +14,17 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GradleJsonApplication {
-    public static void main(String[] args) throws SQLException, IOException {
+
+    public static void main(String[] args) throws Exception {
+        if(args.length == 0){
+            ServerConfig.initServer();
+        }else{
+            consoleReading(args);
+        }
+    }
+
+
+    private static void consoleReading(String[] args) throws SQLException, IOException {
         Scanner sc = new Scanner(System.in);
         while (true){
             ConsoleArgs consoleArgs = new ConsoleArgs();
@@ -31,48 +42,48 @@ public class GradleJsonApplication {
             if(consoleArgs.getHelp()){
                 jc.usage();
             }else{
-                switch (consoleArgs.getCrudType()){
-                    case GET:{
-                        if(consoleArgs.getId() == null){
+                switch (consoleArgs.getCrudType()) {
+                    case GET -> {
+                        if (consoleArgs.getId() == null) {
                             List<Player> allPlayers = DbService.getAllPlayers();
-                            if(consoleArgs.getOutputFile() != null){
+                            if (consoleArgs.getOutputFile() != null) {
                                 Util.writeToFile(consoleArgs.getOutputFile(), allPlayers);
-                            }else{
+                            } else {
                                 Util.writeToConsole(allPlayers);
                             }
-                        }else{
+                        } else {
                             Player playerById = DbService.getPlayerById(consoleArgs.getId());
-                            if(consoleArgs.getOutputFile() != null){
+                            if (consoleArgs.getOutputFile() != null) {
                                 Util.writeToFile(consoleArgs.getOutputFile(), playerById);
-                            }else{
+                            } else {
                                 Util.writeToConsole(playerById);
                             }
                         }
-                        break;
-                    }case SAVE:{
-                        if(consoleArgs.getInputFile() == null){
+                    }
+                    case SAVE -> {
+                        if (consoleArgs.getInputFile() == null) {
                             System.err.println("input file is required if save crud operation");
-                        }else{
+                        } else {
                             List<Player> playerList = Util.readPlayersFromFile(consoleArgs.getInputFile());
                             DbService.savePlayers(playerList);
                         }
-                        break;
-                    }case UPDATE:{
-                        if(consoleArgs.getInputFile() == null){
+                    }
+                    case UPDATE -> {
+                        if (consoleArgs.getInputFile() == null) {
                             System.err.println("input file is required if update crud operation");
-                        }else{
-                            if(consoleArgs.getId() == null){
+                        } else {
+                            if (consoleArgs.getId() == null) {
                                 System.err.println("id is required if update crud operation");
-                            }else{
+                            } else {
                                 Player player = Util.readFromFile(consoleArgs.getInputFile());
                                 DbService.updatePlayer(consoleArgs.getId(), player);
                             }
                         }
-                        break;
-                    }case DELETE:{
-                        if(consoleArgs.getId() == null){
+                    }
+                    case DELETE -> {
+                        if (consoleArgs.getId() == null) {
                             DbService.deleteAllPlayers();
-                        }else{
+                        } else {
                             DbService.deletePlayer(consoleArgs.getId());
                         }
                     }

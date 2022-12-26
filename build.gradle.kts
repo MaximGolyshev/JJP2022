@@ -9,6 +9,7 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
     implementation("org.projectlombok:lombok:1.18.16")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
@@ -21,9 +22,7 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok:1.18.24")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
     implementation("com.beust:jcommander:1.78")
-
-}
-
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
+    implementation("org.eclipse.jetty:jetty-server:11.0.12")
+    implementation("org.eclipse.jetty:jetty-servlet:11.0.12")
+    implementation("org.eclipse.jetty:jetty-servlets:11.0.12")
 }

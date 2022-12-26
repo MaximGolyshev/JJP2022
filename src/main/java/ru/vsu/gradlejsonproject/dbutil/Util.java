@@ -15,8 +15,28 @@ public class Util {
     private static Connection connection = null;
     private static final String URL = "jdbc:postgresql://localhost:5432/game";
     private static final String login = "postgres";
-    private static final String password = "maxim";
+    private static final String password = "456852";
     public static final ObjectMapper objectMapper = new ObjectMapper();
+
+    @SneakyThrows
+    public static List<Player> convertAllFromString(String jsonString){
+        return objectMapper.readValue(jsonString, new TypeReference<>() {});
+    }
+
+    @SneakyThrows
+    public static Player convertOneFromString(String jsonString){
+        return objectMapper.readValue(jsonString, Player.class);
+    }
+
+    @SneakyThrows
+    public static String convertToString(List<Player> players){
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(players);
+    }
+
+    @SneakyThrows
+    public static String convertToString(Player players){
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(players);
+    }
 
     public static Connection getConnection() throws SQLException {
         if(connection == null || connection.isClosed()){
