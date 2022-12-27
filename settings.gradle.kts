@@ -1,2 +1,2 @@
-rootProject.name = "JavaJsonProject"
+rootProject.name = "JJP2022"
 
